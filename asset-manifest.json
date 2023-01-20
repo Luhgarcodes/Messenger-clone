@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Messenger-clone/static/css/main.b16211cd.css",
+    "main.js": "/Messenger-clone/static/js/main.2d809778.js",
+    "index.html": "/Messenger-clone/index.html",
+    "main.b16211cd.css.map": "/Messenger-clone/static/css/main.b16211cd.css.map",
+    "main.2d809778.js.map": "/Messenger-clone/static/js/main.2d809778.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b16211cd.css",
+    "static/js/main.2d809778.js"
+  ]
+}
