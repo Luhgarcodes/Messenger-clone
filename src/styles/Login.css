@@ -36,3 +36,10 @@
     margin-bottom: 20px;
     color: whitesmoke;
 }
+
+@media (max-width: 768px) {
+    .login__container {
+        padding: 30px;
+        width: 90%;
+    }
+}

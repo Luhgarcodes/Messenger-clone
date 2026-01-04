@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, IconButton } from '@mui/material';
-import { AttachFile, InsertEmoticon, MoreVert, SearchOutlined, DeleteOutline } from '@mui/icons-material';
+import { Avatar, IconButton, Menu, MenuItem } from '@mui/material';
+import { AttachFile, InsertEmoticon, MoreVert, SearchOutlined, DeleteOutline, Menu as MenuIcon, ArrowBack, KeyboardArrowDown } from '@mui/icons-material';
 import '../styles/Chat.css';
 import { useStateValue } from '../ContextApi/StateProvider'
 import firebase from 'firebase/compat/app';
@@ -9,7 +9,7 @@ import Pusher from 'pusher-js'
 import { db } from './firebase';
 
 
-const Chat = () => {
+const Chat = ({ toggleSidebar, isSidebarOpen }) => {
     const [seed, setSeed] = useState("");
     const [input, setInput] = useState('');
     const [{ user }] = useStateValue();
@@ -18,6 +18,23 @@ const Chat = () => {
     const messageRef = useRef();
     // const [updatedAt, setUpdatedAt] = useState("");
     const [messages, setMessages] = useState([]);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedMsgId, setSelectedMsgId] = useState(null);
+
+    const handleMenuClick = (event, msgId) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedMsgId(msgId);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedMsgId(null);
+    };
+
+    const handleDeleteMsg = () => {
+        if(selectedMsgId) deleteMessage(selectedMsgId);
+        handleMenuClose();
+    };
 
     const sendMessage = async (e) => {
         e.preventDefault();
@@ -106,21 +123,24 @@ const Chat = () => {
 
 
     return (
-        <div className="chat">
+        <div className={`chat ${!isSidebarOpen ? "chat--fullWidth" : ""}`}>
             <div className="chat__header">
+                <IconButton onClick={toggleSidebar}>
+                   {isSidebarOpen ? <ArrowBack /> : <MenuIcon />}
+                </IconButton>
                 <Avatar
                     className='chat__avatar'
-                    src={`https://avatars.dicebear.com/v2/avataaars/${seed}.svg`}
+                    src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}`}
                 />
                 <div className="chat__headerInfo">
                     <h3>{roomName ? roomName : "Welcome to Messenger"}</h3>
                     <p>
-                        {messages[messages.length - 1] ? `Last Seen at ${new Date(messages[messages.length - 1]?.data.timestamp?.toDate()).toString().slice(0, 25)}`
+                        {messages[messages.length - 1] ? `Last Seen ${new Date(messages[messages.length - 1]?.data.timestamp?.toDate()).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}`
                             : "send new messages"}
                     </p>
                 </div>
                 <div className="chat__headerright">
-                    <IconButton>
+                    {/* <IconButton>
                         <SearchOutlined />
                     </IconButton>
                     <IconButton>
@@ -128,7 +148,7 @@ const Chat = () => {
                     </IconButton>
                     <IconButton>
                         <MoreVert />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton>
                         < DeleteOutline onClick={handleDelete} />
                     </IconButton>
@@ -146,22 +166,51 @@ const Chat = () => {
                             <span className='chat__name'> {message.data.name}</span>
                             {message.data.message}
                             <span className='chat__timestamp'>
-                                {new Date(message?.data.timestamp?.toDate()).toString().slice(3, 25)}
+                                
+                                {new Date(message?.data.timestamp?.toDate()).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}
                             </span>
+                            <div className="chat__messageActions">
+                                <IconButton 
+                                    size="small" 
+                                    onClick={(e) => handleMenuClick(e, message.id)}
+                                    className="chat__messageDropdown"
+                                >
+                                    <KeyboardArrowDown fontSize="small" />
+                                </IconButton>
+                            </div>
                         </p>
                     ))
                 }
+                <Menu
+                    id="message-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                >
+                    <MenuItem onClick={handleDeleteMsg}>
+                        <DeleteOutline fontSize="small" style={{ marginRight: '10px' }} /> Delete
+                    </MenuItem>
+                </Menu>
 
             </div>
             {roomName && <div className="chat__footer">
-                <InsertEmoticon />
+                {/* <InsertEmoticon /> */}
                 <form >
                     <input
                         placeholder='Type a message'
                         onChange={(e) => setInput(e.target.value)}
                         value={input}
                     />
-                    <button onClick={sendMessage}>Send</button>
+                    <button style={{ borderRadius:"5px", padding:"10px",margin:"0px 10px",backgroundColor: "#1a75ff", color: "white",outline:"none",border:"none",cursor:"pointer" ,fontSize:"14px" }} onClick={sendMessage}>🚀</button>
 
                 </form>
             </div>}

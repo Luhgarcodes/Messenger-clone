@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import '../styles/SidebarChat.css'
-import { Avatar } from '@mui/material'
+import { Avatar, Button } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { db } from './firebase'
 
@@ -37,7 +37,7 @@ const SidebarChat = ({ addNewChat, id, name }) => {
     return !addNewChat ? (
         <Link to={`/rooms/${id}`}>
             <div className="sidebarchat">
-                <Avatar src={`https://avatars.dicebear.com/v2/avataaars/${seed}.svg`} />
+                <Avatar src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}`} />
                 <div className="sidebarChat__info">
                     <h2>{name}</h2>
                     <p className='sidebarchat__message'>
@@ -47,8 +47,8 @@ const SidebarChat = ({ addNewChat, id, name }) => {
             </div>
         </Link>
     ) : (
-        <div className="sidebarchat" onClick={createChat}>
-            <h2>Add new Chat</h2>
+        <div className="sidebarchat" >
+            <Button className='border border-white' onClick={createChat}> new Chat</Button>
         </div>
     )
 }

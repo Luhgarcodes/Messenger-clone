@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/Sidebar.css'
-import { DonutLarge, MoreVert, Chat, SearchOutlined } from '@mui/icons-material'
+import { DonutLarge, MoreVert, Chat, SearchOutlined, Close } from '@mui/icons-material'
 import { Avatar, IconButton } from '@mui/material'
 import { useStateValue } from '../ContextApi/StateProvider'
 // import Pusher from 'pusher-js'
@@ -8,7 +8,7 @@ import SidebarChat from './SidebarChat'
 import { db } from './firebase'
 
 
-const Sidebar = () => {
+const Sidebar = ({ showSidebar, toggleSidebar }) => {
 
     const [{ user }] = useStateValue();
     const [rooms, setRooms] = useState([]);
@@ -41,10 +41,13 @@ const Sidebar = () => {
     }, [rooms, search])
 
     return (
-        <div className="sidebar">
+        <div className={`sidebar ${!showSidebar ? 'sidebar--collapsed' : ''}`}>
             <div className="side__header">
                 <Avatar src={user.photoURL} />
                 <div className="sidebar__headerRight">
+                    <IconButton className="sidebar__closeIcon" onClick={toggleSidebar}>
+                        <Close />
+                    </IconButton>
                     <IconButton>
                         <DonutLarge />
                     </IconButton>

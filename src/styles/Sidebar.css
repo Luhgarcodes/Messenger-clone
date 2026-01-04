@@ -6,6 +6,10 @@
     margin: 10px;
 }
 
+.sidebar--collapsed {
+    display: none !important;
+}
+
 .side__header {
     display: flex;
     justify-content: space-between;
@@ -25,6 +29,19 @@
 .sidebar__headerRight>.MuiSvgIcon-root {
     margin-right: 2vw;
     font-size: 40px !important;
+}
+
+/* Default hidden on desktop */
+.sidebar__closeIcon {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .sidebar__closeIcon {
+        display: inline-flex !important;
+        margin-right: 5px;
+        color: #54656f;
+    }
 }
 
 .sidebar__search {
@@ -71,8 +88,23 @@
 }
 
 
-@media (max-width:195px) {
+@media (max-width: 768px) {
     .sidebar {
-        min-width: 195px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 80%; /* Drawer width */
+        max-width: 350px;
+        z-index: 1000; /* On top of chat */
+        background-color: #f8f9fa; /* Solid background to obscure chat */
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        margin: 0;
+        border-right: none;
+        min-width: 0;
+    }
+
+    .sidebar__searchContainer {
+        width: 100%;
     }
 }
